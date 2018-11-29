@@ -1,6 +1,6 @@
 # wp-configr
 
-A Python package for updating the property values in a WordPress `wp-config.php` file.
+A Python package for reading and writing property values in a WordPress `wp-config.php` file.
 
 ## CI status
 
@@ -53,29 +53,40 @@ pip install git+git://github.com/cariad/wp-configr
 To update in-memory `wp-config.php` string content:
 
 ```python
-from wp_configr import ConfigUpdater
+from wp_configr import WpConfigString
 
-updater = ConfigUpdater(config=your_config_string)
+config = WpConfigString(content=your_config_string)
 
-updater.update_property('DB_NAME', 'myblog')
-updater.update_property('DB_USER', 'wp_user')
-updater.update_property('WP_DEBUG', True)
+config.update('DB_NAME', 'myblog')
+config.update('DB_USER', 'wp_user')
+config.update('WP_DEBUG', True)
 
-updated_config_string = updater.config
+updated_config_string = updater.content
 ```
 
 To update a `wp-config.php` file:
 
 ```python
-from wp_configr import FileUpdater
+from wp_configr import WpConfigFile
 
-updater = FileUpdater(filename=your_filename)
+config = WpConfigFile(filename=your_filename)
 
-updater.update_property('DB_NAME', 'myblog')
-updater.update_property('DB_USER', 'wp_user')
-updater.update_property('WP_DEBUG', True)
+config.update('DB_NAME', 'myblog')
+config.update('DB_USER', 'wp_user')
+config.update('WP_DEBUG', True)
 
 # File is updated immediately after each property update.
+```
+
+To read a property value:
+
+```python
+config = WpConfigString(content=your_config_string)
+# ...or:
+config = WpConfigFile(filename=your_filename)
+
+# ...then:
+db_name = config.get('DB_NAME')
 ```
 
 ## Development
