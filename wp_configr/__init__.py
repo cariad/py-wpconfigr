@@ -2,6 +2,5 @@
 Classes initialization.
 """
 
-
-from wp_configr.config_updater import ConfigUpdater
-from wp_configr.file_updater import FileUpdater
+from wp_configr.wp_config_string import WpConfigString
+from wp_configr.wp_config_file import WpConfigFile
