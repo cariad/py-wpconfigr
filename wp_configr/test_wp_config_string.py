@@ -2,7 +2,7 @@
 
 import unittest
 
-from wp_configr.wp_config_string import WpConfigString
+from wp_configr import WpConfigString
 
 
 class GetTestCase(unittest.TestCase):
