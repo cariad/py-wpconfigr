@@ -1,14 +1,13 @@
 
 """
-Updates properties in a 'wp-config.php' file.
+Read and write properties in a 'wp-config.php' file.
 """
 
-from wp_configr import ConfigUpdater
+from wp_configr import WpConfigString
 
-
-class FileUpdater(ConfigUpdater):
+class WpConfigFile(WpConfigString):
     """
-    Updates properties in a 'wp-config.php' file.
+    Read and write properties in a 'wp-config.php' file.
 
     Args:
         filename (str): Filename of the 'wp-config.php' file.
@@ -18,11 +17,11 @@ class FileUpdater(ConfigUpdater):
         self._filename = filename
 
         with open(self._filename, 'r') as stream:
-            config = stream.read()
+            content = stream.read()
 
-        super().__init__(config=config)
+        super().__init__(content=content)
 
-    def update_property(self, key, value):
+    def update(self, key, value):
         """
         Updates the value of the given key in the file.
 
@@ -31,7 +30,7 @@ class FileUpdater(ConfigUpdater):
             value (str): New value of the property.
         """
 
-        super().update_property(key=key, value=value)
+        super().update(key=key, value=value)
 
         with open(self._filename, 'w') as stream:
-            stream.write(self.config)
+            stream.write(self.content)

@@ -4,7 +4,7 @@ Update a wp-config.php file.
 
 import argparse
 
-from wp_configr import FileUpdater
+from wp_configr import WpConfigFile
 
 
 def run_from_cli():
@@ -29,8 +29,8 @@ def run_from_cli():
 
     args = arg_parser.parse_args()
 
-    updater = FileUpdater(filename=args.filename)
-    updater.update_property(key=args.key, value=args.value)
+    updater = WpConfigFile(filename=args.filename)
+    updater.update(key=args.key, value=args.value)
 
 
 if __name__ == '__main__':
