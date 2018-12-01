@@ -1,5 +1,5 @@
 [run]
 include =
-    wp_configr/**
+    wpconfigr/**
 omit =
     **/test_*.py
