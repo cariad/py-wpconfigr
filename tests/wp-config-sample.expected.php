@@ -1,4 +1,7 @@
 <?php
+define('WP_NEW_FALSE', false);
+define('WP_NEW_TRUE', true);
+define('WP_NEW_STRING', 'bar');
 /**
  * The base configuration for WordPress
  *

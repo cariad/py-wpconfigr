@@ -2,4 +2,6 @@ __pycache__
 .coverage
 .DS_Store
 .vscode
+build
+dist
 *.egg-info

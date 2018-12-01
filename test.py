@@ -9,7 +9,7 @@ try:
                 'unittest',
                 'discover',
                 '--start-directory',
-                'wp_configr'])
+                'tests'])
 except CalledProcessError:
     exit(1)
 

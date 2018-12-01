@@ -2,7 +2,7 @@
 
 import unittest
 
-from wp_configr import WpConfigString
+from wpconfigr import WpConfigString
 
 
 class GetTestCase(unittest.TestCase):
@@ -46,11 +46,35 @@ define('DB_USER', 'bar');
 class UpdateTestCase(unittest.TestCase):
     """ Tests for the update method. """
 
+    def test_add_string(self):
+        """ Asserts that a new string property is added. """
+
+        original = """<?php
+define('WP_DEBUG', false);
+"""
+
+        config = WpConfigString(content=original)
+        config.set(key='WP_FOO', value='bar')
+
+        expected = """<?php
+define('WP_FOO', 'bar');
+define('WP_DEBUG', false);
+"""
+
+        self.assertEqual(config.content, expected)
+
+    def test_add_bool(self):
+        """ Asserts that a new boolean property is added. """
+
+        config = WpConfigString(content='<?php\ndefine(\'WP_DEBUG\', false);')
+        config.set(key='WP_FOO', value=True)
+        self.assertEqual(config.content, '<?php\ndefine(\'WP_FOO\', true);\ndefine(\'WP_DEBUG\', false);')
+
     def test_replace_bool(self):
         """ Asserts that boolean value is replaced. """
 
         config = WpConfigString(content='define(\'WP_DEBUG\', false);')
-        config.update(key='WP_DEBUG', value=True)
+        config.set(key='WP_DEBUG', value=True)
         self.assertEqual(config.content, 'define(\'WP_DEBUG\', true);')
 
     def test_replace_empty(self):
@@ -59,7 +83,7 @@ class UpdateTestCase(unittest.TestCase):
         config = 'define(\'DB_USER\', \'\');'
 
         updater = WpConfigString(content=config)
-        updater.update(key='DB_USER', value='updated-db-user')
+        updater.set(key='DB_USER', value='updated-db-user')
 
         expected_config = 'define(\'DB_USER\', \'updated-db-user\');'
 
@@ -71,7 +95,7 @@ class UpdateTestCase(unittest.TestCase):
         config = 'define(\'DB_USER\', \'foo bar\');'
 
         updater = WpConfigString(content=config)
-        updater.update(key='DB_USER', value='updated-db-user')
+        updater.set(key='DB_USER', value='updated-db-user')
 
         expected_config = 'define(\'DB_USER\', \'updated-db-user\');'
 
@@ -86,7 +110,7 @@ define('DB_USER', 'bar');
 """
 
         updater = WpConfigString(content=config)
-        updater.update(key='DB_NAME', value='updated-db-name')
+        updater.set(key='DB_NAME', value='updated-db-name')
 
         expected_config = """
 <?php
@@ -101,7 +125,7 @@ define('DB_USER', 'bar');
 
         def _assert(config, expect):
             updater = WpConfigString(content=config)
-            updater.update(key='DB_NAME', value='new')
+            updater.set(key='DB_NAME', value='new')
             self.assertEqual(updater.content, expect)
 
         _assert(config='define(\'DB_NAME\', \'old\');',

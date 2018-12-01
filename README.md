@@ -1,10 +1,8 @@
 # wp-configr
 
-A Python package for reading and writing property values in a WordPress `wp-config.php` file.
+[![CircleCI](https://circleci.com/gh/cariad/py-wpconfigr/tree/master.svg?style=svg)](https://circleci.com/gh/cariad/py-wpconfigr/tree/master)
 
-## CI status
-
-[![CircleCI](https://circleci.com/gh/cariad/wp-configr/tree/master.svg?style=svg)](https://circleci.com/gh/cariad/wp-configr/tree/master)
+A Python package for reading and writing configuration values in a WordPress `wp-config.php` file.
 
 ## Example
 
@@ -12,80 +10,80 @@ A default `wp-config.php` might look like this:
 
 ```php
 <?php
-/** The name of the database for WordPress */
 define( 'DB_NAME', 'database_name_here' );
-/** MySQL database username */
-define( 'DB_USER', 'username_here' );
 ```
 
 This package will allow you to update the file to:
 
 ```php
 <?php
-/** The name of the database for WordPress */
-define( 'DB_NAME', 'myblog' );
-/** MySQL database username */
-define( 'DB_USER', 'wp_user' );
+define( 'SOMETHING_ENTIRELY_NEW', 'garnet' );
+define( 'DB_NAME', 'my_blog' );
 ```
 
-## Usage
-
-### I just want to update a `wp-config.php` file!
+## Installation
 
 ```shell
-python update.py --filename <filename> --key <key> --value <value>
+pip install wpconfigr
+```
+
+## Command-line usage
+
+To set a value:
+
+```shell
+python -m wpconfigr --filename <filename> --key <key> --value <value>
+```
+
+To read a value:
+
+```shell
+python -m wpconfigr --filename <filename> --key <key>
 ```
 
 For example:
 
 ```shell
-python update.py --filename /mnt/www/wp-config.php --key DB_NAME --value myblog
+python -m wpconfigr --filename /mnt/www/wp-config.php --key DB_NAME
+> database_name_here
+
+python -m wpconfigr --filename /mnt/www/wp-config.php --key DB_NAME --value my_blog
+python -m wpconfigr --filename /mnt/www/wp-config.php --key DB_NAME
+> my_blog
+
+python -m wpconfigr --filename /mnt/www/wp-config.php --key SOMETHING_ENTIRELY_NEW
+# No value returned.
+
+python -m wpconfigr --filename /mnt/www/wp-config.php --key SOMETHING_ENTIRELY_NEW --value garnet
+python -m wpconfigr --filename /mnt/www/wp-config.php --key SOMETHING_ENTIRELY_NEW
+> garnet
 ```
 
-### Installation as project dependency
+### Code usage
 
-```shell
-pip install git+git://github.com/cariad/wp-configr
-```
-
-### Code sample
-
-To update in-memory `wp-config.php` string content:
+To update a string holding `wp-config.php` content:
 
 ```python
-from wp_configr import WpConfigString
+from wpconfigr import WpConfigString
 
 config = WpConfigString(content=your_config_string)
-
-config.update('DB_NAME', 'myblog')
-config.update('DB_USER', 'wp_user')
-config.update('WP_DEBUG', True)
-
+config.set('DB_NAME', 'my_blog')
 updated_config_string = updater.content
 ```
 
-To update a `wp-config.php` file:
+To directly update a `wp-config.php` file:
 
 ```python
-from wp_configr import WpConfigFile
+from wpconfigr import WpConfigFile
 
 config = WpConfigFile(filename=your_filename)
-
-config.update('DB_NAME', 'myblog')
-config.update('DB_USER', 'wp_user')
-config.update('WP_DEBUG', True)
-
+config.set('DB_NAME', 'my_blog')
 # File is updated immediately after each property update.
 ```
 
 To read a property value:
 
 ```python
-config = WpConfigString(content=your_config_string)
-# ...or:
-config = WpConfigFile(filename=your_filename)
-
-# ...then:
 db_name = config.get('DB_NAME')
 ```
 
@@ -95,7 +93,7 @@ db_name = config.get('DB_NAME')
 
 wp-configr requires Python 3.x.
 
-### Installing development dependencies
+### Installing dependencies
 
 ```shell
 pip install -e .[dev]

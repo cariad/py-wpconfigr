@@ -4,7 +4,7 @@ Update a wp-config.php file.
 
 import argparse
 
-from wp_configr import WpConfigFile
+from wpconfigr import WpConfigFile
 
 
 def run_from_cli():
@@ -13,7 +13,8 @@ def run_from_cli():
     """
 
     arg_parser = argparse.ArgumentParser(
-        description='Update a wp-config.php file.')
+        description='Read and write properties in a wp-config.php file. Include a --value argument to set the value, omit it to read the value of the specified key.',
+        prog='python -m wpconfigr')
 
     arg_parser.add_argument('--filename',
                             help='wp-config.php filename',
@@ -21,16 +22,23 @@ def run_from_cli():
 
     arg_parser.add_argument('--key',
                             help='Property key',
-                            required=False)
+                            required=True)
 
     arg_parser.add_argument('--value',
                             help='New property value',
-                            required=True)
+                            required=False)
 
     args = arg_parser.parse_args()
 
     updater = WpConfigFile(filename=args.filename)
-    updater.update(key=args.key, value=args.value)
+
+    if args.value:
+        updater.set(key=args.key, value=args.value)
+    else:
+        got = updater.get(key=args.key)
+
+        if got:
+            print(got)
 
 
 if __name__ == '__main__':

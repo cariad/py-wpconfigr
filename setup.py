@@ -1,26 +1,41 @@
 """
-"wp-configr" package setup.
+"wpconfigr" package setup.
 """
 
 from setuptools import setup
 
+with open('README.md', 'r') as stream:
+    LONG_DESCRIPTION = stream.read()
+
 setup(
-    name='wp-configr',
-    version='0.3',
-    description='Read and write properties in WordPress wp-config.php files.',
-    url='https://github.com/cariad/wp-configr',
     author='Cariad Eccleston',
     author_email='cariad@cariad.me',
-    license='MIT',
-    packages=[
-        'wp_configr'
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent',
+        'Topic :: Internet :: WWW/HTTP :: Site Management'
     ],
-    install_requires=[
-    ],
+    description='Read and write configuration values in a WordPress '
+                '"wp-config.php" file.',
     extras_require={
         'dev': [
+            'autopep8',
             'coverage',
             'pylint'
         ]
-    }
+    },
+    name='wpconfigr',
+    license='MIT',
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
+    packages=[
+        'wpconfigr'
+    ],
+    url='https://github.com/cariad/py-wpconfigr',
+    version='1.0'
 )
