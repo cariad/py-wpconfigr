@@ -4,7 +4,7 @@ import os
 import shutil
 import unittest
 
-from wp_configr import WpConfigFile
+from wpconfigr import WpConfigFile
 
 
 class FileTestCase(unittest.TestCase):
@@ -38,11 +38,14 @@ class FileTestCase(unittest.TestCase):
 
         config = WpConfigFile(filename=actual_file)
 
-        config.update('DB_NAME', 'updated-db-name')
-        config.update('DB_USER', 'updated-db-user')
-        config.update('DB_COLLATE', 'updated-db-collate')
-        config.update('AUTH_KEY', 'updated-auth-key')
-        config.update('WP_DEBUG', True)
+        config.set('DB_NAME', 'updated-db-name')
+        config.set('DB_USER', 'updated-db-user')
+        config.set('DB_COLLATE', 'updated-db-collate')
+        config.set('AUTH_KEY', 'updated-auth-key')
+        config.set('WP_DEBUG', True)
+        config.set('WP_NEW_STRING', 'bar')
+        config.set('WP_NEW_TRUE', True)
+        config.set('WP_NEW_FALSE', False)
 
         with open(actual_file, 'r') as stream:
             actual = stream.readlines()
