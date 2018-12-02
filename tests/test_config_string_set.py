@@ -2,7 +2,11 @@
 
 import unittest
 
+from logging import basicConfig
+
 from wpconfigr import WpConfigString
+
+basicConfig(level='DEBUG')
 
 
 class GetTestCase(unittest.TestCase):
@@ -43,6 +47,7 @@ define('DB_USER', 'bar');
         config = WpConfigString(content=config)
         self.assertIsNone(config.get(key='NOPE'))
 
+
 class UpdateTestCase(unittest.TestCase):
     """ Tests for the update method. """
 
@@ -68,7 +73,9 @@ define('WP_DEBUG', false);
 
         config = WpConfigString(content='<?php\ndefine(\'WP_DEBUG\', false);')
         config.set(key='WP_FOO', value=True)
-        self.assertEqual(config.content, '<?php\ndefine(\'WP_FOO\', true);\ndefine(\'WP_DEBUG\', false);')
+        self.assertEqual(config.content,
+                         '<?php\ndefine(\'WP_FOO\', true);\n'
+                         'define(\'WP_DEBUG\', false);')
 
     def test_replace_bool(self):
         """ Asserts that boolean value is replaced. """

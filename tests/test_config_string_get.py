@@ -2,7 +2,11 @@
 
 import unittest
 
+from logging import basicConfig
+
 from wpconfigr import WpConfigString
+
+basicConfig(level='DEBUG')
 
 
 class GetTestCase(unittest.TestCase):
@@ -12,11 +16,11 @@ class GetTestCase(unittest.TestCase):
     def setUpClass(cls):
         cls.config = WpConfigString(content="""
 <?php
-define('STRING',     'foo');
-define('TRUE',       true);
-define('FALSE',      false);
-define('INTEGER',    1);
-define('FRACTIONAL', 2.3);
+define('STRING',  'foo');
+define('TRUE',    true);
+define('FALSE',   false);
+define('INTEGER', 1);
+define('FLOAT',   2.3);
 """)
 
     def test_string(self):
@@ -35,9 +39,9 @@ define('FRACTIONAL', 2.3);
         """ Asserts that an integer value is returned. """
         self.assertEqual(self.config.get(key='INTEGER'), 1)
 
-    def test_fractional(self):
-        """ Asserts that a fractional number value is returned. """
-        self.assertEqual(self.config.get(key='FRACTIONAL'), 2.3)
+    def test_float(self):
+        """ Asserts that a float value is returned. """
+        self.assertEqual(self.config.get(key='FLOAT'), 2.3)
 
     def test_property_not_exists(self):
         """ Asserts that missing values are returned as None. """
