@@ -37,5 +37,5 @@ setup(
         'wpconfigr'
     ],
     url='https://github.com/cariad/py-wpconfigr',
-    version='1.2'
+    version='1.3'
 )
