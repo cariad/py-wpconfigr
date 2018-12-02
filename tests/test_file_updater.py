@@ -4,7 +4,11 @@ import os
 import shutil
 import unittest
 
+from logging import basicConfig
+
 from wpconfigr import WpConfigFile
+
+basicConfig(level='DEBUG')
 
 
 class FileTestCase(unittest.TestCase):
