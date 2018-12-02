@@ -145,12 +145,14 @@ class WpConfigString():
         Args:
             key (str): Key of the property to update.
             value (str): New value of the property.
+
+        Return:
+            bool: Indicates whether or not a change was made.
         """
 
         match = self._get_match(key=key)
 
         if not match:
-
             self._log.info('"%s" does not exist, so it will be added.', key)
 
             if isinstance(value, str):
@@ -172,11 +174,11 @@ class WpConfigString():
             replace_with = '<?php\n' + new + '\n'
             self._content = self._content.replace(replace_this, replace_with)
             self._log.info('Content string has been updated.')
-            return
+            return True
 
         if self._get_value_from_match(key=key, match=match) == value:
             self._log.info('"%s" is already up-to-date.', key)
-            return
+            return False
 
         self._log.info('"%s" exists and will be updated.', key)
 
@@ -192,3 +194,4 @@ class WpConfigString():
         end = self._content[end_index:]
 
         self._content = start + value + end
+        return True

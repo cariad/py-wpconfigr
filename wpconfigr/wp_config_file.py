@@ -33,12 +33,20 @@ class WpConfigFile(WpConfigString):
         Args:
             key (str): Key of the property to update.
             value (str): New value of the property.
+
+        Return:
+            bool: Indicates whether or not a change was made.
         """
 
-        super().set(key=key, value=value)
+        changed = super().set(key=key, value=value)
+
+        if not changed:
+            return False
 
         self._log.info('Saving configuration to "%s"...', self._filename)
 
         with open(self._filename, 'w') as stream:
             stream.write(self.content)
             self._log.info('Saved configuration to "%s".', self._filename)
+
+        return True
