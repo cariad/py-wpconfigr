@@ -42,6 +42,8 @@ Named parameters:
 - `--filename`: Full path and filename of the `wp-config.php` file.
 - `--key`: Name of the property to create/update.
 - `--value`: String value to set.
+- `--set-true`: Set the value to boolean `true`.
+- `--set-false`: Set the value to boolean `false`.
 - `--log-level`: (Optional) Log level.
 
 ```shell
@@ -53,7 +55,7 @@ python -m wpconfigr --filename  /www/wp-config.php \
 
 ### Reading values from wp-config.php
 
-As above, but omit the `--value` argument.
+As above, but do not specify a value (via the `--value`, `--set-true` or `--set-false` arguments).
 
 ```shell
 python -m wpconfigr --filename /www/wp-config.php \
@@ -107,6 +109,10 @@ python test.py
 ```
 
 ## Changelog
+
+### v1.3 - 2018-12-02
+
+- Added `--set-true` and `--set-false` command-line flags.
 
 ### v1.2 - 2018-12-02
 

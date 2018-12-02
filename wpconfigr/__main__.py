@@ -37,14 +37,38 @@ def run_from_cli():
                             help='Log level',
                             required=False)
 
+    arg_parser.add_argument('--set-true',
+                            action='store_true',
+                            help='Set the value as boolean true')
+
+    arg_parser.add_argument('--set-false',
+                            action='store_true',
+                            help='Set the value as boolean false')
+
     args = arg_parser.parse_args()
+
+    if args.set_true and args.set_false:
+        arg_parser.error('Cannot set --set-true and --set-false.')
+
+    if args.value and args.set_true:
+        arg_parser.error('Cannot set --value and --set-true.')
+
+    if args.value and args.set_false:
+        arg_parser.error('Cannot set --value and --set-false.')
 
     basicConfig(level=str(args.log_level).upper())
 
     updater = WpConfigFile(filename=args.filename)
 
-    if args.value:
-        updater.set(key=args.key, value=args.value)
+    if args.set_true:
+        value = True
+    elif args.set_false:
+        value = False
+    else:
+        value = args.value
+
+    if value is not None:
+        updater.set(key=args.key, value=value)
     else:
         got = updater.get(key=args.key)
 
