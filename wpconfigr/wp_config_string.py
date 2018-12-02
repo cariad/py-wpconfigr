@@ -4,6 +4,8 @@ Read and write properties in a string in the format of a 'wp-config.php' file.
 
 import re
 
+from logging import getLogger
+
 
 class WpConfigString():
     """
@@ -16,32 +18,7 @@ class WpConfigString():
 
     def __init__(self, content):
         self._content = content
-
-    @staticmethod
-    def get_value_from_match(match):
-        """
-        Gets the value of the property in the given MatchObject.
-
-        Args:
-            match (MatchObject): The matched property.
-
-        Return:
-            The discovered value, as a string or boolean.
-        """
-
-        value = match.groups(1)[0]
-        clean_value = str(value).lstrip().rstrip()
-
-        if clean_value == 'true':
-            return True
-
-        if clean_value == 'false':
-            return False
-
-        try:
-            return float(clean_value)
-        except ValueError:
-            return clean_value
+        self._log = getLogger(__name__)
 
     @property
     def content(self):
@@ -49,9 +26,9 @@ class WpConfigString():
 
         return self._content
 
-    def _get_string_match(self, key):
+    def _get_match(self, key):
         """
-        Gets a MatchObject for the given key, assuming a string value.
+        Gets a MatchObject for the given key.
 
         Args:
             key (str): Key of the property to look-up.
@@ -60,18 +37,8 @@ class WpConfigString():
             MatchObject: The discovered match.
         """
 
-        expression = r'(?:\s*)'.join([
-            'define',
-            r'\(',
-            '\'{}\''.format(key),
-            ',',
-            r'\'(.*)\'',
-            r'\)',
-            ';'
-        ])
-
-        pattern = re.compile(expression, re.MULTILINE)
-        return pattern.search(self._content)
+        return self._get_string_match(key=key) or \
+            self._get_non_string_match(key=key)
 
     def _get_non_string_match(self, key):
         """
@@ -97,9 +64,9 @@ class WpConfigString():
         pattern = re.compile(expression, re.MULTILINE)
         return pattern.search(self._content)
 
-    def _get_match(self, key):
+    def _get_string_match(self, key):
         """
-        Gets a MatchObject for the given key.
+        Gets a MatchObject for the given key, assuming a string value.
 
         Args:
             key (str): Key of the property to look-up.
@@ -108,8 +75,53 @@ class WpConfigString():
             MatchObject: The discovered match.
         """
 
-        return self._get_string_match(key=key) or \
-            self._get_non_string_match(key=key)
+        expression = r'(?:\s*)'.join([
+            'define',
+            r'\(',
+            '\'{}\''.format(key),
+            ',',
+            r'\'(.*)\'',
+            r'\)',
+            ';'
+        ])
+
+        pattern = re.compile(expression, re.MULTILINE)
+        return pattern.search(self._content)
+
+    def _get_value_from_match(self, key, match):
+        """
+        Gets the value of the property in the given MatchObject.
+
+        Args:
+            key (str):           Key of the property looked-up.
+            match (MatchObject): The matched property.
+
+        Return:
+            The discovered value, as a string or boolean.
+        """
+
+        value = match.groups(1)[0]
+        clean_value = str(value).lstrip().rstrip()
+
+        if clean_value == 'true':
+            self._log.info('Got value of "%s" as boolean true.', key)
+            return True
+
+        if clean_value == 'false':
+            self._log.info('Got value of "%s" as boolean false.', key)
+            return False
+
+        try:
+            float_value = float(clean_value)
+            self._log.info('Got value of "%s" as float "%f".',
+                           key,
+                           float_value)
+            return float_value
+        except ValueError:
+            self._log.info('Got value of "%s" as string "%s".',
+                           key,
+                           clean_value)
+            return clean_value
 
     def get(self, key):
         """
@@ -124,7 +136,7 @@ class WpConfigString():
         if not match:
             return None
 
-        return WpConfigString.get_value_from_match(match=match)
+        return self._get_value_from_match(key=key, match=match)
 
     def set(self, key, value):
         """
@@ -138,26 +150,43 @@ class WpConfigString():
         match = self._get_match(key=key)
 
         if not match:
+
+            self._log.info('"%s" does not exist, so it will be added.', key)
+
             if isinstance(value, str):
+                self._log.info('"%s" will be added as a PHP string value.',
+                               key)
                 value_str = '\'{}\''.format(value)
             else:
+                self._log.info('"%s" will be added as a PHP object value.',
+                               key)
                 value_str = str(value).lower()
 
-            new = 'define(\'{key}\', {value});\n'.format(
+            new = 'define(\'{key}\', {value});'.format(
                 key=key,
                 value=value_str)
 
-            self._content = self._content.replace('<?php\n', '<?php\n' + new)
+            self._log.info('"%s" will be added as: %s', key, new)
+
+            replace_this = '<?php\n'
+            replace_with = '<?php\n' + new + '\n'
+            self._content = self._content.replace(replace_this, replace_with)
+            self._log.info('Content string has been updated.')
             return
 
-        if WpConfigString.get_value_from_match(match=match) == value:
+        if self._get_value_from_match(key=key, match=match) == value:
+            self._log.info('"%s" is already up-to-date.', key)
             return
+
+        self._log.info('"%s" exists and will be updated.', key)
 
         start_index = match.start(1)
         end_index = match.end(1)
 
         if isinstance(value, bool):
             value = str(value).lower()
+
+        self._log.info('"%s" will be updated with value: %s', key, value)
 
         start = self._content[:start_index]
         end = self._content[end_index:]
