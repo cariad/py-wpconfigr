@@ -110,6 +110,10 @@ python test.py
 
 ## Changelog
 
+### v1.4 - 2018-12-06
+
+- Fixed bug where commented properties were read and updated.
+
 ### v1.3 - 2018-12-02
 
 - Added `--set-true` and `--set-false` command-line flags.

@@ -9,45 +9,6 @@ from wpconfigr import WpConfigString
 basicConfig(level='DEBUG')
 
 
-class GetTestCase(unittest.TestCase):
-    """ Tests for the get function. """
-
-    def test_string_property_exists(self):
-        """ Asserts that the string property is found. """
-
-        config = """
-<?php
-define('DB_NAME', 'foo');
-define('DB_USER', 'bar');
-"""
-
-        config = WpConfigString(content=config)
-        self.assertEqual(config.get(key='DB_USER'), 'bar')
-
-    def test_bool_property_exists(self):
-        """ Asserts that the boolean property is found. """
-
-        config = """
-<?php
-define('WP_DEBUG', true);
-"""
-
-        config = WpConfigString(content=config)
-        self.assertTrue(config.get(key='WP_DEBUG'))
-
-    def test_property_not_exists(self):
-        """ Asserts that None is returned. """
-
-        config = """
-<?php
-define('DB_NAME', 'foo');
-define('DB_USER', 'bar');
-"""
-
-        config = WpConfigString(content=config)
-        self.assertIsNone(config.get(key='NOPE'))
-
-
 class UpdateTestCase(unittest.TestCase):
     """ Tests for the update method. """
 
@@ -126,6 +87,24 @@ define('DB_USER', 'bar');
 """
 
         self.assertEqual(updater.content, expected_config)
+
+
+    def test_does_not_replace_comment(self):
+        """ Asserts that a comment is not updated. """
+
+        original = """<?php
+// define('WP_DEBUG', false);
+"""
+
+        config = WpConfigString(content=original)
+        config.set(key='WP_DEBUG', value=True)
+
+        expected = """<?php
+define('WP_DEBUG', true);
+// define('WP_DEBUG', false);
+"""
+
+        self.assertEqual(config.content, expected)
 
     def test_space_variants(self):
         """ Asserts that spaces are handled. """
