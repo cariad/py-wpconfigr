@@ -21,6 +21,7 @@ define('TRUE',    true);
 define('FALSE',   false);
 define('INTEGER', 1);
 define('FLOAT',   2.3);
+// define('COMMENTED_STRING', 'jam);
 """)
 
     def test_string(self):
@@ -42,6 +43,10 @@ define('FLOAT',   2.3);
     def test_float(self):
         """ Asserts that a float value is returned. """
         self.assertEqual(self.config.get(key='FLOAT'), 2.3)
+
+    def test_comments(self):
+        """ Asserts that a commented value is not returned. """
+        self.assertIsNone(self.config.get(key='COMMENTED_STRING'))
 
     def test_property_not_exists(self):
         """ Asserts that missing values are returned as None. """

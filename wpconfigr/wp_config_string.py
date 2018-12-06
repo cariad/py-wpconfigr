@@ -52,6 +52,7 @@ class WpConfigString():
         """
 
         expression = r'(?:\s*)'.join([
+            '^',
             'define',
             r'\(',
             '\'{}\''.format(key),
@@ -76,6 +77,7 @@ class WpConfigString():
         """
 
         expression = r'(?:\s*)'.join([
+            '^',
             'define',
             r'\(',
             '\'{}\''.format(key),
@@ -187,9 +189,13 @@ class WpConfigString():
 
         if isinstance(value, bool):
             value = str(value).lower()
-            self._log.info('"%s" will be updated with boolean value: %s', key, value)
+            self._log.info('"%s" will be updated with boolean value: %s',
+                           key,
+                           value)
         else:
-            self._log.info('"%s" will be updated with string value: %s', key, value)
+            self._log.info('"%s" will be updated with string value: %s',
+                           key,
+                           value)
 
         start = self._content[:start_index]
         end = self._content[end_index:]
