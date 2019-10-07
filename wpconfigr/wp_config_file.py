@@ -1,4 +1,3 @@
-
 """
 Read and write properties in a 'wp-config.php' file.
 """
