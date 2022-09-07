@@ -1,4 +1,4 @@
-# wp-configr
+# wpconfigger
 
 [![CircleCI](https://circleci.com/gh/cariad/py-wpconfigr/tree/master.svg?style=svg)](https://circleci.com/gh/cariad/py-wpconfigr/tree/master)
 
@@ -13,7 +13,7 @@ A default `wp-config.php` might look like this:
 define( 'DB_NAME', 'database_name_here' );
 ```
 
-`wpconfigr` will help you update the file to:
+`wpconfigger` will help you update the file to:
 
 ```php
 <?php
@@ -21,7 +21,7 @@ define( 'SOMETHING_ENTIRELY_NEW', 'garnet' );
 define( 'DB_NAME', 'my_blog' );
 ```
 
-`wpconfigr` exposes two functions:
+`wpconfigger` exposes two functions:
 
 - `set(key, value)` will update a property of name `key` if it exists, otherwise will create it.
 - `get(key)` will return the value of the property of name `key`, or `None` if it doesn't exist.
@@ -30,7 +30,7 @@ define( 'DB_NAME', 'my_blog' );
 ## Installation
 
 ```shell
-pip install wpconfigr
+pip install wpconfigger
 ```
 
 ## Command-line usage
@@ -47,10 +47,10 @@ Named parameters:
 - `--log-level`: (Optional) Log level.
 
 ```shell
-python -m wpconfigr --filename  /www/wp-config.php \
-                    --key       DB_NAME \
-                    --value     my_blog \
-                    --log-level info
+python -m wpconfigger --filename  /www/wp-config.php \
+                      --key       DB_NAME \
+                      --value     my_blog \
+                      --log-level info
 ```
 
 ### Reading values from wp-config.php
@@ -58,8 +58,8 @@ python -m wpconfigr --filename  /www/wp-config.php \
 As above, but do not specify a value (via the `--value`, `--set-true` or `--set-false` arguments).
 
 ```shell
-python -m wpconfigr --filename /www/wp-config.php \
-                    --key      DB_NAME
+python -m wpconfigger --filename /www/wp-config.php \
+                      --key      DB_NAME
 ```
 
 ### Code usage
@@ -77,7 +77,7 @@ updated_config_string = config.content
 To directly update a `wp-config.php` file:
 
 ```python
-from wpconfigr import WpConfigFile
+from wpconfigger import WpConfigFile
 
 config = WpConfigFile(filename)
 config.set('DB_NAME', 'my_blog')
@@ -94,7 +94,7 @@ db_name = config.get('DB_NAME')
 
 ### Prerequisites
 
-wp-configr requires Python 3.x.
+`wpconfigger` requires Python 3.x.
 
 ### Installing dependencies
 
@@ -109,6 +109,10 @@ python test.py
 ```
 
 ## Changelog
+
+### v1.0.0 - 2022-07-09
+
+- Renamed and republished as `wpconfigger`.
 
 ### v1.4 - 2018-12-06
 
