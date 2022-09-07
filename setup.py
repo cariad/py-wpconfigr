@@ -1,5 +1,5 @@
 """
-"wpconfigr" package setup.
+"wpconfigger" package setup.
 """
 
 from setuptools import setup
@@ -29,7 +29,7 @@ setup(
             'pylint'
         ]
     },
-    name='wpconfigr',
+    name='wpconfigger',
     license='MIT',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -37,5 +37,5 @@ setup(
         'wpconfigr'
     ],
     url='https://github.com/cariad/py-wpconfigr',
-    version='1.4'
+    version='1.0.0'
 )
